@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Здравствуйте! Потеряли вещь в метро?</title>
+</head>
+<body>
+    <h1>Здравствуйте! Потеряли вещь в метро?</h1>
+    <h2>Заполните, пожалуйста, форму и мы Вам поможем!</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div style="margin-bottom: 20px;">
+            {{ form.description.label_tag }}<br>
+            <small>Пример: "Чёрный рюкзак с красными молниями"</small><br>
+            {{ form.description }}<br>
+            {{ form.description.errors }}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            {{ form.found_date.label_tag }}<br>
+            <small>Укажите дату, когда Вы потеряли вещь.</small><br>
+            {{ form.found_date }}<br>
+            {{ form.found_date.errors }}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            {{ form.station.label_tag }}<br>
+            <small>Выберите станцию, где, по Вашему предположению, могла остаться вещь</small><br>
+            {{ form.station }}<br>
+            {{ form.station.errors }}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            {{ form.category.label_tag }}<br>
+            <small>Выберите тип предмета — например, зонт, сумка, телефон</small><br>
+            {{ form.category }}<br>
+            {{ form.category.errors }}
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button type="submit">Отправить</button>
+        </div>
+    </form>
+
+    {% if results is not None %}
+        <hr>
+        <h2>Результаты поиска:</h2>
+
+        {% if results %}
+            <ul>
+                {% for item in results %}
+                    <li style="margin-bottom: 20px;">
+                        <strong>{{ item.description }}</strong><br>
+                        Категория: {{ item.category.name }}<br>
+                        Станция: {{ item.station.name }}<br>
+                        Дата находки: {{ item.found_date }}<br>
+                        {% if item.image_url %}
+                            <img src="{{ item.image_url }}" alt="Фото" style="max-width: 200px;">
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p><strong>По Вашему запросу ничего не нашли 😞</strong></p>
+            <p>Сформулируйте иначе описание вещи и попробуйте снова.</p>
+            <p>Если повторный поиск не дал результатов, возможно, вашу вещь ещё не нашли — попробуйте позже.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
