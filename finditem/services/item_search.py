@@ -42,7 +42,14 @@ def find_similar_items(description, date, station, category):
 
         # все слова из запроса пользователя должны входить в описание вещи
         # иначе — вещь отбрасывается
-        if all(word in item_words for word in search_words):
+        # if all(word in item_words for word in search_words):
+        #     matched.append(item)
+
+        # считаем, сколько слов из запроса входит в описание
+        common_count = sum(1 for word in search_words if word in item_words)
+
+        # если совпадает не менее 2/3 слов — добавляем
+        if common_count / len(search_words) >= 2/3:
             matched.append(item)
 
     return matched
